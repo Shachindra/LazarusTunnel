@@ -1,2 +1,4 @@
 # LazarusTunnel
-App to create multiple tunnel from any local system to the internet bypassing the NAT/Firewalls
+Create Multiple Reverse SSH Tunnels from any local system to the internet bypassing the NAT/Firewalls.
+
+For more info: Visit https://Lazarus.Network

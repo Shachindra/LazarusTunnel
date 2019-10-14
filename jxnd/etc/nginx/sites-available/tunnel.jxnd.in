@@ -1,0 +1,98 @@
+map_hash_bucket_size 256;
+
+map $subdomain $subdomain_port {
+	yottaserver     127.0.0.1:6001;
+        istellar        127.0.0.1:6002;
+}
+
+server {
+        listen 80;
+        listen [::]:80;
+        server_name tunnel.jxnd.in;
+	include snippets/letsencrypt.conf;
+        location / {
+                return 301 https://tunnel.jxnd.in;
+        }
+}
+
+server {
+        listen 443 ssl http2;
+        listen [::]:443 ssl http2;
+	server_name tunnel.jxnd.in;
+
+        ssl_certificate /etc/letsencrypt/live/tunnel.jxnd.in/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/tunnel.jxnd.in/privkey.pem;
+        ssl_trusted_certificate /etc/letsencrypt/live/tunnel.jxnd.in/chain.pem;
+        include snippets/ssl.conf;
+        include snippets/letsencrypt.conf;
+
+        root /var/www/html/tunnel.jxnd.in;
+        index index.html index.htm index.nginx-debian.html;
+
+        location / {
+                try_files $uri $uri/ =404;
+        }
+}
+
+server {
+        listen 80;
+        listen [::]:80;
+        #server_name *.tunnel.jxnd.in;
+	server_name ~^(?<subdomain>.+)\.tunnel\.jxnd\.in$
+        include snippets/letsencrypt.conf;
+        location / {
+                #return 301 https://$host$request_uri;
+		return 302 https://$subdomain.tunnel.jxnd.in$request_uri;
+        }
+}
+
+server {
+	listen 443 ssl http2;
+	listen [::]:443 ssl http2;
+	server_name ~^(?<subdomain>.+)\.tunnel\.jxnd\.in$;
+	#access_log /var/log/nginx/$host;
+	
+	ssl_certificate /etc/letsencrypt/live/tunnel.jxnd.in/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/tunnel.jxnd.in/privkey.pem;
+	ssl_trusted_certificate /etc/letsencrypt/live/tunnel.jxnd.in/chain.pem;
+	include snippets/ssl.conf;
+	include snippets/letsencrypt.conf;
+	#include snippets/includes/sa-redirects-global.conf;
+
+	error_page 500 503 504 /50x.html;
+	error_page 502 /502.html;
+	location = /50x.html {
+		root /var/www/html/tunnel.jxnd.in/50x-error;
+	}
+	location = /502.html {
+                root /var/www/html/tunnel.jxnd.in/50x-error;
+        }
+
+	location / {
+		proxy_pass http://$subdomain_port$request_uri;
+		proxy_set_header X-Real-IP $remote_addr;
+		proxy_set_header Host $host;
+		proxy_set_header X-Forwarded-For $proxy_add_x_forwarded_for;
+		proxy_set_header X-Forwarded-Proto https;
+		proxy_buffering off;
+		proxy_redirect off;
+	}
+}
+
+#server {
+        #listen 443 ssl http2;
+        #listen [::]:443 ssl http2;
+        #server_name *.tunnel.jxnd.in;
+        #access_log /var/log/nginx/$host;
+
+        #ssl_certificate /etc/letsencrypt/live/tunnel.jxnd.in/fullchain.pem;
+        #ssl_certificate_key /etc/letsencrypt/live/tunnel.jxnd.in/privkey.pem;
+        #ssl_trusted_certificate /etc/letsencrypt/live/tunnel.jxnd.in/chain.pem;
+        #include snippets/ssl.conf;
+        #include snippets/letsencrypt.conf;
+
+        #location / {
+		#root /var/www/html/tunnel.jxnd.in/50x-error;
+		#index 50x.html;
+#        }
+#}
