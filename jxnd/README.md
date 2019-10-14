@@ -43,5 +43,5 @@ echo "GatewayPorts yes" >> /etc/ssh/sshd_config
 sudo service ssh restart
 
 ## Execute on client
-ssh -R 6002:localhost:22 access@tunnel.jxnd.in
-Password: tunnelUser
+ssh -R <port-given-to-you>:localhost:<port-you-want-to-expose> access@tunnel.jxnd.in
+Password: <password-given-to-you>

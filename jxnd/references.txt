@@ -32,8 +32,24 @@ https://dev.to/k4ml/poor-man-ngrok-with-tcp-proxy-and-ssh-reverse-tunnel-1fm
 * Build your own SmartDNS using Sniproxy+Dnsmasq
 https://www.reddit.com/r/SmartDNS/comments/787snc/build_your_own_smartdns_using_sniproxydnsmasq/
 
+* Tunnelling services for exposing localhost to the web
+https://www.chenhuijing.com/blog/tunnelling-services-for-exposing-localhost-to-the-web/
+
+* Linux Users and Groups
+https://www.linode.com/docs/tools-reference/linux-users-and-groups/
+
 * StackOverflow
 https://stackoverflow.com/questions/9578628/redirecting-a-subdomain-with-a-regular-expression-in-nginx
 https://serverfault.com/questions/771064/in-nginx-map-specific-subdomains-to-ports-redirect-all-others/920064
 https://stackoverflow.com/questions/50121492/using-nginx-map-directive-to-dynamically-set-proxy-upstream
 https://serverfault.com/questions/562332/nginx-can-i-use-a-mapping-of-upstream-servers-with-proxy-pass-directive
+https://superuser.com/questions/149404/to-create-an-ssh-user-who-only-has-permission-to-access-specific-folders
+https://superuser.com/questions/767524/why-can-i-not-connect-to-a-reverse-ssh-tunnel-port-remotely-even-with-gatewaypo
+
+* Others
+https://github.com/antoniomika/sish
+https://github.com/mmatczuk/go-http-tunnel
+https://github.com/milio48/serveo
+https://github.com/kahlys/proxy
+https://www.wireguard.com/
+https://github.com/dlundquist/sniproxy
