@@ -1,9 +1,5 @@
 map_hash_bucket_size 256;
-
-map $subdomain $subdomain_port {
-	yottaserver     127.0.0.1:6001;
-        istellar        127.0.0.1:6002;
-}
+include snippets/includes/sa-redirects-global.conf;
 
 server {
         listen 80;

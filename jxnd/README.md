@@ -25,13 +25,12 @@ sudo nano /etc/nginx/sites-available/tunnel.jxnd.in
 sudo nginx -t
 sudo systemctl restart nginx
 
->>> In another window: tmux new -s cert/tmux a -t cert
+> In another window: tmux new -s cert/tmux a -t cert
 tail -f /var/log/nginx/error.log
 
 ## Get the certs using Certbot
 sudo certbot certonly --agree-tos --email connect@lazarus.network -w /var/lib/letsencrypt/ --server https://acme-v02.api.letsencrypt.org/directory -d *.tunnel.jxnd.in --manual --preferred-challenges dns-01
->>> Comment all the lines to disable autorenew: sudo nano /etc/cron.d/certbot
-
+> Comment all the lines to disable autorenew: sudo nano /etc/cron.d/certbot
 
 ## Create the acess user
 sudo adduser --home /restricted/access access
@@ -43,5 +42,5 @@ echo "GatewayPorts yes" >> /etc/ssh/sshd_config
 sudo service ssh restart
 
 ## Execute on client
-ssh -R <port-given-to-you>:localhost:<port-you-want-to-expose> access@tunnel.jxnd.in
-Password: <password-given-to-you>
+ssh -vnNT -R (port-given-to-you):localhost:(port-you-want-to-expose) access@tunnel.jxnd.in
+Password: (password-given-to-you)
