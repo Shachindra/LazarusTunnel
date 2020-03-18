@@ -4,25 +4,25 @@ include snippets/includes/sa-redirects-global.conf;
 server {
         listen 80;
         listen [::]:80;
-        server_name tunnel.jxnd.in;
+        server_name tunnel.lazarus.network;
 	include snippets/letsencrypt.conf;
         location / {
-                return 301 https://tunnel.jxnd.in;
+                return 301 https://tunnel.lazarus.network;
         }
 }
 
 server {
         listen 443 ssl http2;
         listen [::]:443 ssl http2;
-	server_name tunnel.jxnd.in;
+	server_name tunnel.lazarus.network;
 
-        ssl_certificate /etc/letsencrypt/live/tunnel.jxnd.in/fullchain.pem;
-        ssl_certificate_key /etc/letsencrypt/live/tunnel.jxnd.in/privkey.pem;
-        ssl_trusted_certificate /etc/letsencrypt/live/tunnel.jxnd.in/chain.pem;
+        ssl_certificate /etc/letsencrypt/live/tunnel.lazarus.network/fullchain.pem;
+        ssl_certificate_key /etc/letsencrypt/live/tunnel.lazarus.network/privkey.pem;
+        ssl_trusted_certificate /etc/letsencrypt/live/tunnel.lazarus.network/chain.pem;
         include snippets/ssl.conf;
         include snippets/letsencrypt.conf;
 
-        root /var/www/html/tunnel.jxnd.in;
+        root /var/www/html/tunnel.lazarus.network;
         index index.html index.htm index.nginx-debian.html;
 
         location / {
@@ -33,24 +33,24 @@ server {
 server {
         listen 80;
         listen [::]:80;
-        #server_name *.tunnel.jxnd.in;
-	server_name ~^(?<subdomain>.+)\.tunnel\.jxnd\.in$
+        #server_name *.tunnel.lazarus.network;
+	server_name ~^(?<subdomain>.+)\.tunnel\.lazarus\.network$
         include snippets/letsencrypt.conf;
         location / {
                 #return 301 https://$host$request_uri;
-		return 302 https://$subdomain.tunnel.jxnd.in$request_uri;
+		return 302 https://$subdomain.tunnel.lazarus.network$request_uri;
         }
 }
 
 server {
 	listen 443 ssl http2;
 	listen [::]:443 ssl http2;
-	server_name ~^(?<subdomain>.+)\.tunnel\.jxnd\.in$;
+	server_name ~^(?<subdomain>.+)\.tunnel\.lazarus\.network$;
 	#access_log /var/log/nginx/$host;
 	
-	ssl_certificate /etc/letsencrypt/live/tunnel.jxnd.in/fullchain.pem;
-	ssl_certificate_key /etc/letsencrypt/live/tunnel.jxnd.in/privkey.pem;
-	ssl_trusted_certificate /etc/letsencrypt/live/tunnel.jxnd.in/chain.pem;
+	ssl_certificate /etc/letsencrypt/live/tunnel.lazarus.network/fullchain.pem;
+	ssl_certificate_key /etc/letsencrypt/live/tunnel.lazarus.network/privkey.pem;
+	ssl_trusted_certificate /etc/letsencrypt/live/tunnel.lazarus.network/chain.pem;
 	include snippets/ssl.conf;
 	include snippets/letsencrypt.conf;
 	#include snippets/includes/sa-redirects-global.conf;
@@ -58,10 +58,10 @@ server {
 	error_page 500 503 504 /50x.html;
 	error_page 502 /502.html;
 	location = /50x.html {
-		root /var/www/html/tunnel.jxnd.in/50x-error;
+		root /var/www/html/tunnel.lazarus.network/50x-error;
 	}
 	location = /502.html {
-                root /var/www/html/tunnel.jxnd.in/50x-error;
+                root /var/www/html/tunnel.lazarus.network/50x-error;
         }
 
 	location / {
@@ -78,17 +78,17 @@ server {
 #server {
         #listen 443 ssl http2;
         #listen [::]:443 ssl http2;
-        #server_name *.tunnel.jxnd.in;
+        #server_name *.tunnel.lazarus.network;
         #access_log /var/log/nginx/$host;
 
-        #ssl_certificate /etc/letsencrypt/live/tunnel.jxnd.in/fullchain.pem;
-        #ssl_certificate_key /etc/letsencrypt/live/tunnel.jxnd.in/privkey.pem;
-        #ssl_trusted_certificate /etc/letsencrypt/live/tunnel.jxnd.in/chain.pem;
+        #ssl_certificate /etc/letsencrypt/live/tunnel.lazarus.network/fullchain.pem;
+        #ssl_certificate_key /etc/letsencrypt/live/tunnel.lazarus.network/privkey.pem;
+        #ssl_trusted_certificate /etc/letsencrypt/live/tunnel.lazarus.network/chain.pem;
         #include snippets/ssl.conf;
         #include snippets/letsencrypt.conf;
 
         #location / {
-		#root /var/www/html/tunnel.jxnd.in/50x-error;
+		#root /var/www/html/tunnel.lazarus.network/50x-error;
 		#index 50x.html;
 #        }
 #}

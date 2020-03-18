@@ -1,5 +1,5 @@
-# JxND Tunnel
-Steps to setup the JxND Tunnel on the Remote Server
+# Lazarus Tunnel
+Steps to setup the Lazarus Tunnel on the Remote Server
 
 ## Download Necessary Software
 sudo apt-get update && sudo apt-get upgrade -y
@@ -10,8 +10,8 @@ sudo ufw status
 sudo systemctl status nginx
 
 ## Configure Nginx
-sudo nano /etc/nginx/sites-available/tunnel.jxnd.in
-sudo ln -s /etc/nginx/sites-available/tunnel.jxnd.in /etc/nginx/sites-enabled/
+sudo nano /etc/nginx/sites-available/tunnel.lazarus.network
+sudo ln -s /etc/nginx/sites-available/tunnel.lazarus.network /etc/nginx/sites-enabled/
 sudo nginx -t
 sudo systemctl restart nginx
 
@@ -21,15 +21,15 @@ sudo chgrp www-data /var/lib/letsencrypt
 sudo chmod g+s /var/lib/letsencrypt
 sudo nano /etc/nginx/snippets/letsencrypt.conf
 sudo nano /etc/nginx/snippets/ssl.conf
-sudo nano /etc/nginx/sites-available/tunnel.jxnd.in
+sudo nano /etc/nginx/sites-available/tunnel.lazarus.network
 sudo nginx -t
 sudo systemctl restart nginx
 
-> In another window: tmux new -s cert/tmux a -t cert
+> In another window: tmux new -s nginx / tmux a -t nginx
 tail -f /var/log/nginx/error.log
 
 ## Get the certs using Certbot
-sudo certbot certonly --agree-tos --email connect@lazarus.network -w /var/lib/letsencrypt/ --server https://acme-v02.api.letsencrypt.org/directory -d *.tunnel.jxnd.in --manual --preferred-challenges dns-01
+sudo certbot certonly --agree-tos --email connect@lazarus.network -w /var/lib/letsencrypt/ --server https://acme-v02.api.letsencrypt.org/directory -d *.tunnel.lazarus.network --manual --preferred-challenges dns-01
 > Comment all the lines to disable autorenew: sudo nano /etc/cron.d/certbot
 
 ## Create the acess user
@@ -42,5 +42,5 @@ echo "GatewayPorts yes" >> /etc/ssh/sshd_config
 sudo service ssh restart
 
 ## Execute on client
-ssh -vnNT -R (port-given-to-you):localhost:(port-you-want-to-expose) access@tunnel.jxnd.in
+ssh -vnNT -R (port-given-to-you):localhost:(port-you-want-to-expose) access@tunnel.lazarus.network
 Password: (password-given-to-you)
