@@ -1,9 +1,5 @@
 map_hash_bucket_size 256;
-
-map $subdomain $subdomain_port {
-	yottaserver     127.0.0.1:6001;
-        istellar        127.0.0.1:6002;
-}
+include snippets/includes/sa-redirects-global.conf;
 
 server {
         listen 80;
@@ -78,21 +74,3 @@ server {
 		proxy_redirect off;
 	}
 }
-
-#server {
-        #listen 443 ssl http2;
-        #listen [::]:443 ssl http2;
-        #server_name *.tunnel.lazarus.network;
-        #access_log /var/log/nginx/$host;
-
-        #ssl_certificate /etc/letsencrypt/live/tunnel.lazarus.network/fullchain.pem;
-        #ssl_certificate_key /etc/letsencrypt/live/tunnel.lazarus.network/privkey.pem;
-        #ssl_trusted_certificate /etc/letsencrypt/live/tunnel.lazarus.network/chain.pem;
-        #include snippets/ssl.conf;
-        #include snippets/letsencrypt.conf;
-
-        #location / {
-		#root /var/www/html/tunnel.lazarus.network/50x-error;
-		#index 50x.html;
-#        }
-#}
