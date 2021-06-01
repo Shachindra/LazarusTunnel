@@ -1,2 +1,0 @@
-# LazarusTunnel Smart Contract
-
