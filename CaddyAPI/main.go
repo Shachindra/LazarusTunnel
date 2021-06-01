@@ -5,6 +5,10 @@ import (
 	"os"
 	"time"
 
+	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/api"
+	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/core"
+	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/middleware"
+	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/util"
 	helmet "github.com/danielkov/gin-helmet"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
