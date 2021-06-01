@@ -40,8 +40,10 @@ func addTunnel(c *gin.Context) {
 	value, msg, err := middleware.IsValid(name, port)
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+		c.JSON(http.StatusOK, resp)
 	} else if value == -1 {
-		resp = util.Message(400, msg)
+		resp = util.Message(404, msg)
+		c.JSON(http.StatusBadRequest, resp)
 	} else if value == 1 {
 		//create a tunnel struct object
 		var data model.Tunnel
@@ -54,11 +56,12 @@ func addTunnel(c *gin.Context) {
 		err := middleware.AddTunnel(data)
 		if err != nil {
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+			c.JSON(http.StatusInternalServerError, resp)
 		} else {
 			resp = util.MessageTunnel(200, data)
+			c.JSON(http.StatusOK, resp)
 		}
 	}
-	c.JSON(http.StatusOK, resp)
 }
 
 //getTunnels gets all tunnel config
@@ -67,11 +70,11 @@ func getTunnels(c *gin.Context) {
 	tunnels, err := middleware.ReadTunnels()
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+		c.JSON(http.StatusInternalServerError, resp)
 	} else {
 		resp = util.MessageTunnels(200, tunnels.Tunnels)
+		c.JSON(http.StatusOK, resp)
 	}
-
-	c.JSON(http.StatusOK, resp)
 }
 
 //getTunnel get specific tunnel config
@@ -83,28 +86,31 @@ func getTunnel(c *gin.Context) {
 	tunnel, err := middleware.ReadTunnel(name)
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+		c.JSON(http.StatusInternalServerError, resp)
 	}
 
 	//check if tunnel exists
 	if tunnel.Name == "" {
 		resp = util.Message(404, "Tunnel Doesn't Exists")
+		c.JSON(http.StatusNotFound, resp)
 	} else {
 		port, err := strconv.Atoi(tunnel.Port)
 		if err != nil {
 			util.LogError("string conv error: ", err)
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+			c.JSON(http.StatusInternalServerError, resp)
 		} else {
 			status, err := core.ScanPort(port)
 			if err != nil {
 				resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+				c.JSON(http.StatusInternalServerError, resp)
 			} else {
 				tunnel.Status = status
 				resp = util.MessageTunnel(200, *tunnel)
+				c.JSON(http.StatusOK, resp)
 			}
 		}
 	}
-
-	c.JSON(http.StatusOK, resp)
 }
 
 func deleteTunnel(c *gin.Context) {
@@ -115,19 +121,23 @@ func deleteTunnel(c *gin.Context) {
 	tunnel, err := middleware.ReadTunnel(name)
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+		c.JSON(http.StatusInternalServerError, resp)
 	}
 
 	//check if tunnel exists
 	if tunnel.Name == "" {
-		resp = util.Message(404, "Tunnel Doesn't Exists")
+		resp = util.Message(400, "Tunnel Doesn't Exists")
+		c.JSON(http.StatusBadRequest, resp)
 	} else {
 		//delete tunnel config
 		err = middleware.DeleteTunnel(name)
 		if err != nil {
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+			c.JSON(http.StatusInternalServerError, resp)
 		} else {
 			resp = util.Message(200, "Deleted Tunnel: "+name)
+			c.JSON(http.StatusOK, resp)
 		}
 	}
-	c.JSON(http.StatusOK, resp)
+
 }

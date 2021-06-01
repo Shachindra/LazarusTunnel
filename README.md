@@ -6,13 +6,11 @@ Requirements:
 
 For more info: Visit https://Lazarus.Network
 
-[<img src="https://lazarus.network/wp-content/themes/lazarus/app-resources/images/tunnel.png" data-canonical-src="https://lazarus.network/wp-content/themes/lazarus/app-resources/images/tunnel.png" width="250" height="250" />](https://lazarus.network/)
-
 ## Caddy Installation
 
 ### Using Git Repository
 1. Clone Repository using go get 
-> `go get -u github.com/REVOtic/bcmwallet`
+
 
 ### Using Release
 1. Download Release file
