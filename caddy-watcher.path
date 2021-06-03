@@ -1,0 +1,9 @@
+# /etc/systemd/system/caddy-watcher.path
+[Unit]
+Description=Watch /etc/caddy for changes
+
+[Path]
+PathModified=/etc/caddy
+
+[Install]
+WantedBy=multi-user.target

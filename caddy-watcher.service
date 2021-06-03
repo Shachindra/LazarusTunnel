@@ -1,0 +1,11 @@
+# /etc/systemd/system/caddy-watcher.service
+[Unit]
+Description=Caddy directory watcher
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart caddy
+
+[Install]
+WantedBy=multi-user.target

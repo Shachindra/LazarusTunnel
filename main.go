@@ -91,6 +91,6 @@ func main() {
 
 	err := ginApp.Run(fmt.Sprintf("%s:%s", os.Getenv("SERVER"), os.Getenv("PORT")))
 	if err != nil {
-		log.WithFields(util.StandardFields).Fatal("failed to Start Server")
+		log.WithFields(util.StandardFields).Fatal("Failed to Start Server")
 	}
 }

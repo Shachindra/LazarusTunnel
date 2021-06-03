@@ -1,0 +1,9 @@
+# /etc/systemd/system/nginx-watcher.path
+[Unit]
+Description=Watch /etc/nginx/sites-available for changes
+
+[Path]
+PathModified=/etc/nginx/sites-available
+
+[Install]
+WantedBy=multi-user.target

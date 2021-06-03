@@ -1,0 +1,11 @@
+# /etc/systemd/system/nginx-watcher.service
+[Unit]
+Description=Nginx directory watcher
+After=network.target
+
+[Service]
+Type=oneshot
+ExecStart=/bin/systemctl restart nginx
+
+[Install]
+WantedBy=multi-user.target
