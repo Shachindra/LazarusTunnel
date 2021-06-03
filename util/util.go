@@ -14,7 +14,7 @@ var Version = "1.0"
 // StandardFields for logger
 var StandardFields = log.Fields{
 	"hostname": "HostServer",
-	"appname":  "CaddyAPI",
+	"appname":  "TunnelAPI",
 }
 
 // ReadFile file content

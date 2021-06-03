@@ -53,6 +53,7 @@ func addTunnel(c *gin.Context) {
 		data.Name = name
 		data.Port = strconv.Itoa(port)
 		data.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+		data.Domain = os.Getenv("NGINX_DOMAIN")
 
 		//to add tunnel config
 		err := middleware.AddSSHTunnel(data)

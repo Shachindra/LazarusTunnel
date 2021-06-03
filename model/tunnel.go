@@ -4,6 +4,7 @@ type Tunnel struct {
 	Name      string `json:"name"`
 	Port      string `json:"port"`
 	CreatedAt string `json:"createdAt"`
+	Domain    string `json:"domain"`
 	Status    string `json:"status,omitempty"`
 }
 

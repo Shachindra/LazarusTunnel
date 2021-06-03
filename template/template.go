@@ -13,10 +13,10 @@ import (
 var (
 	caddyTpl = `
 # {{.Name}}, {{.Port}}, {{.CreatedAt}}
-{{.Name}}.webtun.lazarus.network {
+{{.Name}}.{{.Domain}} {
 	reverse_proxy / 127.0.0.1:{{.Port}}
 	log {
-		output file /var/log/caddy/{{.Name}}.webtun.lazarus.network.access.log {
+		output file /var/log/caddy/{{.Name}}.{{.Domain}}.access.log {
 			roll_size 3MiB
 			roll_keep 5
 			roll_keep_for 48h
@@ -34,7 +34,7 @@ var (
 # {{.Name}}, {{.Port}}, {{.CreatedAt}}
 server {
 	listen 6000;
-	server_name {{.Name}}.sshtun.lazarus.network;
+	server_name {{.Name}}.{{.Domain}};
 	
 	location / {
 		proxy_pass http://127.0.0.1:{{.Port}}$request_uri;

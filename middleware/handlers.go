@@ -80,6 +80,7 @@ func ReadWebTunnel(tunnelName string) (*model.Tunnel, error) {
 			data.Name = tunnel.Name
 			data.Port = tunnel.Port
 			data.CreatedAt = tunnel.CreatedAt
+			data.Domain = tunnel.Domain
 			data.Status = tunnel.Status
 			break
 		}
@@ -236,6 +237,7 @@ func ReadSSHTunnel(tunnelName string) (*model.Tunnel, error) {
 			data.Name = tunnel.Name
 			data.Port = tunnel.Port
 			data.CreatedAt = tunnel.CreatedAt
+			data.Domain = tunnel.Domain
 			data.Status = tunnel.Status
 			break
 		}
