@@ -6,22 +6,36 @@ import (
 	"net"
 	"os"
 	"path/filepath"
-	"strconv"
 	"strings"
 	"time"
 
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/util"
+	"github.com/TheLazarusNetwork/LazarusTunnel/util"
 )
 
+//Init initializes json file for caddy and nginx
 func Init() {
-	path := filepath.Join(os.Getenv("CADDY_CONF_DIR"), "server.json")
+	//caddy.json path
+	path := filepath.Join(os.Getenv("APP_CONF_DIR"), "caddy.json")
 
+	//check if exists
 	if !util.FileExists(path) {
 		file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		util.CheckError("Server.json error: ", err)
+		util.CheckError("caddy.json error: ", err)
 
 		_, err = file.Write([]byte("[]"))
-		util.CheckError("Server.json error: ", err)
+		util.CheckError("caddy.json error: ", err)
+	}
+
+	//nginx.json path
+	path = filepath.Join(os.Getenv("APP_CONF_DIR"), "nginx.json")
+
+	//check if exists
+	if !util.FileExists(path) {
+		file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+		util.CheckError("nginx.json error: ", err)
+
+		_, err = file.Write([]byte("[]"))
+		util.CheckError("nginx.json error: ", err)
 	}
 }
 
@@ -44,6 +58,7 @@ func Writefile(path string, bytes []byte) (err error) {
 	return nil
 }
 
+//ScanPort checks avilability of port
 func ScanPort(port int) (string, error) {
 	ip := os.Getenv("SERVER")
 	timer := 500 * time.Millisecond
@@ -65,19 +80,8 @@ func ScanPort(port int) (string, error) {
 	return "active", nil
 }
 
-func GetPort() (int, error) {
-	max, err := strconv.Atoi(os.Getenv("UpperRange"))
-	if err != nil {
-		util.LogError("String Conversion error: ", err)
-		return -1, err
-	}
-
-	min, err := strconv.Atoi(os.Getenv("LowerRange"))
-	if err != nil {
-		util.LogError("String Conversion error: ", err)
-		return -1, err
-	}
-
+//GetPort returns available port based on random generation
+func GetPort(max, min int) (int, error) {
 	port := rand.Intn(max-min) + min
 
 	status, err := ScanPort(port)
@@ -89,7 +93,7 @@ func GetPort() (int, error) {
 	if status == "inactive" {
 		return port, nil
 	} else if status == "active" {
-		GetPort()
+		GetPort(max, min)
 	}
 
 	return -1, nil

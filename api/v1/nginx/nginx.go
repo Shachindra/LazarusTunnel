@@ -1,21 +1,22 @@
-package caddy
+package nginx
 
 import (
 	"net/http"
+	"os"
 	"strconv"
 	"strings"
 	"time"
 
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/core"
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/middleware"
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/model"
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/util"
+	"github.com/TheLazarusNetwork/LazarusTunnel/core"
+	"github.com/TheLazarusNetwork/LazarusTunnel/middleware"
+	"github.com/TheLazarusNetwork/LazarusTunnel/model"
+	"github.com/TheLazarusNetwork/LazarusTunnel/util"
 	"github.com/gin-gonic/gin"
 )
 
 // ApplyRoutes applies router to gin Router
 func ApplyRoutes(r *gin.RouterGroup) {
-	g := r.Group("/caddy")
+	g := r.Group("/nginx")
 	{
 		g.POST("", addTunnel)
 		g.GET("", getTunnels)
@@ -32,12 +33,14 @@ func addTunnel(c *gin.Context) {
 	name := strings.ToLower(c.PostForm("name"))
 
 	// port allocation
-	port, err := core.GetPort()
+	max, _ := strconv.Atoi(os.Getenv("NGINX_UPPER_RANGE"))
+	min, _ := strconv.Atoi(os.Getenv("NGINX_LOWER_RANGE"))
+	port, err := core.GetPort(max, min)
 	if err != nil {
 		panic(err)
 	}
 
-	value, msg, err := middleware.IsValid(name, port)
+	value, msg, err := middleware.IsValidSSH(name, port)
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
 		c.JSON(http.StatusOK, resp)
@@ -50,10 +53,9 @@ func addTunnel(c *gin.Context) {
 		data.Name = name
 		data.Port = strconv.Itoa(port)
 		data.CreatedAt = time.Now().UTC().Format(time.RFC3339)
-		data.Status = "inactive"
 
 		//to add tunnel config
-		err := middleware.AddTunnel(data)
+		err := middleware.AddSSHTunnel(data)
 		if err != nil {
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
 			c.JSON(http.StatusInternalServerError, resp)
@@ -67,7 +69,7 @@ func addTunnel(c *gin.Context) {
 //getTunnels gets all tunnel config
 func getTunnels(c *gin.Context) {
 	//read all tunnel config
-	tunnels, err := middleware.ReadTunnels()
+	tunnels, err := middleware.ReadSSHTunnels()
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
 		c.JSON(http.StatusInternalServerError, resp)
@@ -83,7 +85,7 @@ func getTunnel(c *gin.Context) {
 	name := c.Param("name")
 
 	//read tunnel config
-	tunnel, err := middleware.ReadTunnel(name)
+	tunnel, err := middleware.ReadSSHTunnel(name)
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
 		c.JSON(http.StatusInternalServerError, resp)
@@ -118,7 +120,7 @@ func deleteTunnel(c *gin.Context) {
 	name := c.Param("name")
 
 	//read tunnel config
-	tunnel, err := middleware.ReadTunnel(name)
+	tunnel, err := middleware.ReadSSHTunnel(name)
 	if err != nil {
 		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
 		c.JSON(http.StatusInternalServerError, resp)
@@ -130,7 +132,7 @@ func deleteTunnel(c *gin.Context) {
 		c.JSON(http.StatusBadRequest, resp)
 	} else {
 		//delete tunnel config
-		err = middleware.DeleteTunnel(name)
+		err = middleware.DeleteSSHTunnel(name)
 		if err != nil {
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
 			c.JSON(http.StatusInternalServerError, resp)

@@ -5,10 +5,10 @@ import (
 	"os"
 	"time"
 
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/api"
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/core"
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/middleware"
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/util"
+	"github.com/TheLazarusNetwork/LazarusTunnel/api"
+	"github.com/TheLazarusNetwork/LazarusTunnel/core"
+	"github.com/TheLazarusNetwork/LazarusTunnel/middleware"
+	"github.com/TheLazarusNetwork/LazarusTunnel/util"
 	helmet "github.com/danielkov/gin-helmet"
 	"github.com/gin-contrib/cors"
 	"github.com/gin-contrib/static"
@@ -30,7 +30,7 @@ func init() {
 	} else {
 		util.StandardFields = log.Fields{
 			"hostname": HostName,
-			"appname":  "CaddyAPI",
+			"appname":  "TunnelAPI",
 		}
 	}
 	// Check if loading environment variables from .env file is required

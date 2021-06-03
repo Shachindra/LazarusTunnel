@@ -1,7 +1,7 @@
 package api
 
 import (
-	v1 "github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/api/v1"
+	v1 "github.com/TheLazarusNetwork/LazarusTunnel/api/v1"
 
 	"github.com/gin-gonic/gin"
 )

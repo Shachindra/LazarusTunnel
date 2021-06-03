@@ -1,4 +1,4 @@
-module github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI
+module github.com/TheLazarusNetwork/LazarusTunnel
 
 go 1.16
 

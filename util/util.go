@@ -4,7 +4,7 @@ import (
 	"io/ioutil"
 	"os"
 
-	"github.com/TheLazarusNetwork/LazarusTunnel/CaddyAPI/model"
+	"github.com/TheLazarusNetwork/LazarusTunnel/model"
 	log "github.com/sirupsen/logrus"
 )
 
