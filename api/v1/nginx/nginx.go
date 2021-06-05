@@ -35,34 +35,45 @@ func addTunnel(c *gin.Context) {
 	// port allocation
 	max, _ := strconv.Atoi(os.Getenv("NGINX_UPPER_RANGE"))
 	min, _ := strconv.Atoi(os.Getenv("NGINX_LOWER_RANGE"))
-	port, err := core.GetPort(max, min)
-	if err != nil {
-		panic(err)
-	}
 
-	value, msg, err := middleware.IsValidSSH(name, port)
-	if err != nil {
-		resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
-		c.JSON(http.StatusOK, resp)
-	} else if value == -1 {
-		resp = util.Message(404, msg)
-		c.JSON(http.StatusBadRequest, resp)
-	} else if value == 1 {
-		//create a tunnel struct object
-		var data model.Tunnel
-		data.Name = name
-		data.Port = strconv.Itoa(port)
-		data.CreatedAt = time.Now().UTC().Format(time.RFC3339)
-		data.Domain = os.Getenv("NGINX_DOMAIN")
+	for {
+		port, err := core.GetPort(max, min)
+		if err != nil {
+			panic(err)
+		}
 
-		//to add tunnel config
-		err := middleware.AddSSHTunnel(data)
+		value, msg, err := middleware.IsValidSSH(name, port)
 		if err != nil {
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
-			c.JSON(http.StatusInternalServerError, resp)
-		} else {
-			resp = util.MessageTunnel(200, data)
 			c.JSON(http.StatusOK, resp)
+			break
+		} else if value == -1 {
+			if msg == "Port Already in use" {
+				continue
+			}
+
+			resp = util.Message(404, msg)
+			c.JSON(http.StatusBadRequest, resp)
+			break
+		} else if value == 1 {
+			//create a tunnel struct object
+			var data model.Tunnel
+			data.Name = name
+			data.Port = strconv.Itoa(port)
+			data.CreatedAt = time.Now().UTC().Format(time.RFC3339)
+			data.Domain = os.Getenv("NGINX_DOMAIN")
+
+			//to add tunnel config
+			err := middleware.AddSSHTunnel(data)
+			if err != nil {
+				resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
+				c.JSON(http.StatusInternalServerError, resp)
+				break
+			} else {
+				resp = util.MessageTunnel(200, data)
+				c.JSON(http.StatusOK, resp)
+				break
+			}
 		}
 	}
 }

@@ -42,12 +42,14 @@ func init() {
 		}
 	}
 
+	// initialize json files and update config files
 	core.Init()
-	middleware.Init()
+	middleware.UpdateCaddyConfig()
+	middleware.UpdateNginxConfig()
 }
 
 func main() {
-	log.WithFields(util.StandardFields).Infof("Starting WalletServices Version: %s", util.Version)
+	log.WithFields(util.StandardFields).Infof("Starting TunnelServices Version: %s", util.Version)
 
 	if os.Getenv("RUNTYPE") == "debug" {
 		// set gin release debug

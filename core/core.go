@@ -12,30 +12,36 @@ import (
 	"github.com/TheLazarusNetwork/LazarusTunnel/util"
 )
 
+var AppConfDir = "./conf"
+var CaddyJSON = "caddy.json"
+var NginxJSON = "nginx.json"
+
+var CaddyConfDir = os.Getenv("CADDY_CONF_DIR")
+var CaddyFile = os.Getenv("CADDY_INTERFACE_NAME")
+
+var NginxConfDir = os.Getenv("NGINX_CONF_DIR")
+var NginxFile = os.Getenv("NGINX_INTERFACE_NAME")
+
 //Init initializes json file for caddy and nginx
 func Init() {
 	//caddy.json path
-	path := filepath.Join(os.Getenv("APP_CONF_DIR"), "caddy.json")
-
+	path := filepath.Join(AppConfDir, CaddyJSON)
 	//check if exists
 	if !util.FileExists(path) {
-		file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		util.CheckError("caddy.json error: ", err)
-
-		_, err = file.Write([]byte("[]"))
-		util.CheckError("caddy.json error: ", err)
+		err := util.CreateJSONFile(path)
+		if err != nil {
+			util.CheckError("caddy.json error: ", err)
+		}
 	}
 
 	//nginx.json path
-	path = filepath.Join(os.Getenv("APP_CONF_DIR"), "nginx.json")
-
+	path = filepath.Join(os.Getenv("APP_CONF_DIR"), NginxJSON)
 	//check if exists
 	if !util.FileExists(path) {
-		file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
-		util.CheckError("nginx.json error: ", err)
-
-		_, err = file.Write([]byte("[]"))
-		util.CheckError("nginx.json error: ", err)
+		err := util.CreateJSONFile(path)
+		if err != nil {
+			util.CheckError("nginx.json error: ", err)
+		}
 	}
 }
 

@@ -3,13 +3,15 @@ package util
 import (
 	"io/ioutil"
 	"os"
+	"regexp"
 
 	"github.com/TheLazarusNetwork/LazarusTunnel/model"
 	log "github.com/sirupsen/logrus"
 )
 
 // Version Build Version
-var Version = "1.0"
+var Version = os.Getenv("VERSION")
+var IsLetter = regexp.MustCompile(`^[a-z0-9]+$`).MatchString
 
 // StandardFields for logger
 var StandardFields = log.Fields{
@@ -44,6 +46,20 @@ func FileExists(name string) bool {
 		return false
 	}
 	return !info.IsDir()
+}
+
+func CreateJSONFile(path string) error {
+	file, err := os.OpenFile(path, os.O_APPEND|os.O_CREATE|os.O_WRONLY, 0644)
+	if err != nil {
+		return err
+	}
+
+	_, err = file.Write([]byte("[]"))
+	if err != nil {
+		return err
+	}
+
+	return nil
 }
 
 // CheckError for checking any errors
