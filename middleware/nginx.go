@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -171,6 +172,7 @@ func UpdateNginxConfig() error {
 	}
 
 	for _, tunnel := range tunnels.Tunnels {
+		fmt.Println("tunnel: ", tunnel)
 		_, err := template.NginxConfigTempl(tunnel)
 		if err != nil {
 			util.LogError("Nginx update error: ", err)
