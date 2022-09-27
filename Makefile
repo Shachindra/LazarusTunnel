@@ -34,3 +34,7 @@ test:
 
 run:
 	go run . ./.env
+
+mod:
+	go mod tidy
+	go mod vendor

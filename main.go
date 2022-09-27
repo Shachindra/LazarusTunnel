@@ -1,16 +1,11 @@
 package main
 
 import (
-	"context"
 	"fmt"
-	"net"
 	"os"
 	"time"
 
 	"github.com/TheLazarusNetwork/LazarusTunnel/api"
-	"github.com/TheLazarusNetwork/LazarusTunnel/api/v1/caddy"
-	"github.com/TheLazarusNetwork/LazarusTunnel/api/v1/nginx"
-	pb "github.com/TheLazarusNetwork/LazarusTunnel/api/v1/nginx/pb/tunnel"
 	"github.com/TheLazarusNetwork/LazarusTunnel/core"
 	"github.com/TheLazarusNetwork/LazarusTunnel/middleware"
 	"github.com/TheLazarusNetwork/LazarusTunnel/util"
@@ -21,9 +16,6 @@ import (
 	"github.com/joho/godotenv"
 	"github.com/patrickmn/go-cache"
 	log "github.com/sirupsen/logrus"
-
-	"google.golang.org/grpc"
-	"google.golang.org/grpc/reflection"
 )
 
 func init() {
@@ -71,9 +63,9 @@ func main() {
 		log.SetLevel(log.InfoLevel)
 	}
 	// initialize grpc
-	go initGrpc()
+	go api.InitGrpc()
 	// creates a gin router with default middleware: logger and recovery (crash-free) middleware
-	ginApp := gin.Default()
+	ginApp := gin.Default() //rest
 
 	// cors middleware
 	config := cors.DefaultConfig()
@@ -103,69 +95,4 @@ func main() {
 	if err != nil {
 		log.WithFields(util.StandardFields).Fatal("Failed to Start Server")
 	}
-}
-
-// run gRPC server==========================================================================
-
-type server struct {
-	pb.UnimplementedNginxTunnelServiceServer
-}
-
-func initGrpc() {
-	listener, err := net.Listen("tcp", ":8080")
-	if err != nil {
-		panic(err)
-	}
-
-	s := grpc.NewServer()
-	reflection.Register(s)
-	ser := &server{}
-	pb.RegisterNginxTunnelServiceServer(s, ser)
-	if err := s.Serve(listener); err != nil {
-		log.Fatalf("failed to serve: %v", err)
-	}
-}
-
-// gRPC services =============================================================================
-
-func (s *server) GetTunnels(ctx context.Context, in *pb.Empty) (*pb.GetTunnelResponse, error) {
-	tunnels, status, err := nginx.GetTunnels()
-	return &pb.GetTunnelResponse{Message: tunnels, Status: int32(status)}, err
-}
-
-func (s *server) SetTunnel(ctx context.Context, in *pb.SetTunnelRequest) (*pb.SetTunnelResponse, error) {
-	tunnel, status, err := nginx.SetTunnel(in.Name)
-	return &pb.SetTunnelResponse{Message: tunnel, Status: int32(status)}, err
-}
-
-func (s *server) DeleteTunnel(ctx context.Context, in *pb.SetTunnelRequest) (*pb.DeleteTunnelResponse, error) {
-	msg, status, err := nginx.DeleteTunnel(in.Name)
-	return &pb.DeleteTunnelResponse{Message: msg, Status: int32(status)}, err
-}
-
-func (s *server) GetByName(ctx context.Context, in *pb.SetTunnelRequest) (*pb.SetTunnelResponse, error) {
-	msg, status, err := nginx.GetTunnelByName(in.Name)
-	return &pb.SetTunnelResponse{Message: msg, Status: int32(status)}, err
-}
-
-// caddy==================================================================
-
-func (s *server) GetCaddyByName(ctx context.Context, in *pb.SetTunnelRequest) (*pb.SetTunnelResponse, error) {
-	msg, status, err := caddy.CaddyGetTunnelByName(in.Name)
-	return &pb.SetTunnelResponse{Message: msg, Status: int32(status)}, err
-}
-
-func (s *server) GetCaddyTunnels(ctx context.Context, in *pb.Empty) (*pb.GetTunnelResponse, error) {
-	tunnels, status, err := caddy.CaddyGetTunnels()
-	return &pb.GetTunnelResponse{Message: tunnels, Status: int32(status)}, err
-}
-
-func (s *server) SetCaddyTunnel(ctx context.Context, in *pb.SetTunnelRequest) (*pb.SetTunnelResponse, error) {
-	tunnel, status, err := caddy.CaddySetTunnel(in.Name)
-	return &pb.SetTunnelResponse{Message: tunnel, Status: int32(status)}, err
-}
-
-func (s *server) DeleteCaddyTunnel(ctx context.Context, in *pb.SetTunnelRequest) (*pb.DeleteTunnelResponse, error) {
-	msg, status, err := caddy.CaddyDeleteTunnel(in.Name)
-	return &pb.DeleteTunnelResponse{Message: msg, Status: int32(status)}, err
 }
