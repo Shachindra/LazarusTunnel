@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -26,8 +27,9 @@ func IsValidWeb(name string, port int) (int, string, error) {
 
 	// check if name or port is already in use
 	tunnels, err := ReadWebTunnels()
+	fmt.Println("isValidweb", err)
 	if err != nil {
-		return -1, "", err
+		return -1, "Read web tunnel is responsing err MSG from /middleware/caddy.go", err
 	} else {
 		for _, tunnel := range tunnels.Tunnels {
 			if tunnel.Name == name {
@@ -50,12 +52,15 @@ func IsValidWeb(name string, port int) (int, string, error) {
 func ReadWebTunnels() (*model.Tunnels, error) {
 	file, err := os.OpenFile(filepath.Join(os.Getenv("APP_CONF_DIR"), "caddy.json"), os.O_RDWR|os.O_APPEND, 0666)
 	if err != nil {
+		fmt.Println("ReadWebTunnels( error 1) :", err)
 		util.LogError("File Open error: ", err)
 		return nil, err
 	}
 
 	b, err := ioutil.ReadAll(file)
 	if err != nil {
+		fmt.Println("ReadWebTunnels( error 2) :", err)
+
 		util.LogError("File Read error: ", err)
 		return nil, err
 	}
@@ -63,6 +68,8 @@ func ReadWebTunnels() (*model.Tunnels, error) {
 	var tunnels model.Tunnels
 	err = json.Unmarshal(b, &tunnels.Tunnels)
 	if err != nil {
+		fmt.Println("ReadWebTunnels( error 3) :", err)
+
 		util.LogError("Unmarshal json error: ", err)
 		return nil, err
 	}
@@ -111,12 +118,13 @@ func AddWebTunnel(tunnel model.Tunnel) error {
 
 	err = util.WriteFile(filepath.Join(os.Getenv("APP_CONF_DIR"), "caddy.json"), inter)
 	if err != nil {
-		util.LogError("File write error: ", err)
+		util.LogError("1 File write error: ", err)
 		return err
 	}
 
 	err = UpdateCaddyConfig()
 	if err != nil {
+		fmt.Println("err 3")
 		return err
 	}
 
@@ -152,6 +160,7 @@ func DeleteWebTunnel(tunnelName string) error {
 
 	err = UpdateCaddyConfig()
 	if err != nil {
+		fmt.Println("err 2")
 		return err
 	}
 

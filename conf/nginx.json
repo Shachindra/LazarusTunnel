@@ -1,0 +1,80 @@
+[
+   {
+      "name": "prince2",
+      "port": "6081",
+      "createdAt": "2022-09-25T07:09:22Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "prince3",
+      "port": "6887",
+      "createdAt": "2022-09-25T07:13:13Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "prince4",
+      "port": "6847",
+      "createdAt": "2022-09-25T07:16:25Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "creta",
+      "port": "6059",
+      "createdAt": "2022-09-26T05:19:57Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "creta2",
+      "port": "6318",
+      "createdAt": "2022-09-26T05:21:00Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "creta3",
+      "port": "6425",
+      "createdAt": "2022-09-26T07:31:10Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "magic",
+      "port": "6540",
+      "createdAt": "2022-09-26T08:09:55Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "lolop",
+      "port": "6300",
+      "createdAt": "2022-09-26T09:55:32Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "ayuhs",
+      "port": "6694",
+      "createdAt": "2022-09-26T10:59:21Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "nitish",
+      "port": "6511",
+      "createdAt": "2022-09-26T11:13:42Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "abhinav",
+      "port": "6162",
+      "createdAt": "2022-09-26T11:31:52Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "granted",
+      "port": "6089",
+      "createdAt": "2022-09-26T11:39:56Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "pushpa",
+      "port": "6728",
+      "createdAt": "2022-09-26T11:41:49Z",
+      "domain": "sshtun.mydomain.com"
+   }
+]

@@ -23,7 +23,7 @@ func init() {
 	log.SetOutput(os.Stderr)
 	log.SetLevel(log.DebugLevel)
 
-	// Get Hostname for updating Log StandardFields
+	// Get Hostname for updating Log StandardFi`elds
 	HostName, err := os.Hostname()
 	if err != nil {
 		log.Infof("Error in getting the Hostname: %v", err)
@@ -62,9 +62,10 @@ func main() {
 		// log level info
 		log.SetLevel(log.InfoLevel)
 	}
-
+	// initialize grpc
+	go api.InitGrpc()
 	// creates a gin router with default middleware: logger and recovery (crash-free) middleware
-	ginApp := gin.Default()
+	ginApp := gin.Default() //rest
 
 	// cors middleware
 	config := cors.DefaultConfig()
@@ -83,13 +84,12 @@ func main() {
 	// serve static files
 	ginApp.Use(static.Serve("/", static.LocalFile("./ui", false)))
 
+	// Apply API Routes
+	api.ApplyRoutes(ginApp)
 	// no route redirect to frontend app
 	ginApp.NoRoute(func(c *gin.Context) {
 		c.JSON(404, gin.H{"status": 404, "message": "Invalid Endpoint Request"})
 	})
-
-	// Apply API Routes
-	api.ApplyRoutes(ginApp)
 
 	err := ginApp.Run(fmt.Sprintf("%s:%s", os.Getenv("SERVER"), os.Getenv("PORT")))
 	if err != nil {

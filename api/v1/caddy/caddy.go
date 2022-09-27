@@ -1,6 +1,7 @@
 package caddy
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
@@ -31,6 +32,7 @@ var resp map[string]interface{}
 func addTunnel(c *gin.Context) {
 	//post form parameters
 	name := strings.ToLower(c.PostForm("name"))
+	fmt.Println("name :", name)
 
 	// port allocation
 	max, _ := strconv.Atoi(os.Getenv("CADDY_UPPER_RANGE"))
@@ -38,18 +40,31 @@ func addTunnel(c *gin.Context) {
 
 	for {
 		port, err := core.GetPort(max, min)
+		fmt.Println("Port caddy :", port)
+
+		// fmt.Println("Port :", port)
+		fmt.Println("err :", err)
 		if err != nil {
 			panic(err)
+
+			// fmt.Println("this is the panic err :",err)
+
 		}
 
 		// check validity of tunnel name and port
 		value, msg, err := middleware.IsValidWeb(name, port)
+		fmt.Println("caddyValue :", value)
+		fmt.Println("msg :", msg)
+		fmt.Println("err :", err)
 
+		// fmt.Println("value :", value)
 		if err != nil {
+			fmt.Println("first err != nill")
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
-			c.JSON(http.StatusOK, resp)
+			c.JSON(http.StatusBadGateway, resp)
 			break
 		} else if value == -1 {
+			fmt.Println("before port is already in use")
 			if msg == "Port Already in use" {
 				continue
 			}
@@ -157,3 +172,4 @@ func deleteTunnel(c *gin.Context) {
 	}
 
 }
+

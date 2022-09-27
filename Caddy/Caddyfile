@@ -1,0 +1,72 @@
+
+# prince2, 6081, 2022-09-25T07:09:22Z
+prince2.sshtun.mydomain.com {
+	reverse_proxy / 127.0.0.1:6081
+	log {
+		output file /var/log/caddy/prince2.sshtun.mydomain.com.access.log {
+			roll_size 3MiB
+			roll_keep 5
+			roll_keep_for 48h
+		}
+		format console
+	}
+	encode gzip zstd
+
+	tls connect@lazarus.network {
+		protocols tls1.2 tls1.3
+	}
+}
+
+# guarav, 8081, 2022-09-26T15:50:48Z
+guarav.webtun.mydomain.com {
+	reverse_proxy / 127.0.0.1:8081
+	log {
+		output file /var/log/caddy/guarav.webtun.mydomain.com.access.log {
+			roll_size 3MiB
+			roll_keep 5
+			roll_keep_for 48h
+		}
+		format console
+	}
+	encode gzip zstd
+
+	tls connect@lazarus.network {
+		protocols tls1.2 tls1.3
+	}
+}
+
+# guarava, 8887, 2022-09-26T15:55:14Z
+guarava.webtun.mydomain.com {
+	reverse_proxy / 127.0.0.1:8887
+	log {
+		output file /var/log/caddy/guarava.webtun.mydomain.com.access.log {
+			roll_size 3MiB
+			roll_keep 5
+			roll_keep_for 48h
+		}
+		format console
+	}
+	encode gzip zstd
+
+	tls connect@lazarus.network {
+		protocols tls1.2 tls1.3
+	}
+}
+
+# guaravaa, 8847, 2022-09-26T15:57:51Z
+guaravaa.webtun.mydomain.com {
+	reverse_proxy / 127.0.0.1:8847
+	log {
+		output file /var/log/caddy/guaravaa.webtun.mydomain.com.access.log {
+			roll_size 3MiB
+			roll_keep 5
+			roll_keep_for 48h
+		}
+		format console
+	}
+	encode gzip zstd
+
+	tls connect@lazarus.network {
+		protocols tls1.2 tls1.3
+	}
+}

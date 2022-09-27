@@ -1,0 +1,26 @@
+[
+   {
+      "name": "prince2",
+      "port": "6081",
+      "createdAt": "2022-09-25T07:09:22Z",
+      "domain": "sshtun.mydomain.com"
+   },
+   {
+      "name": "guarav",
+      "port": "8081",
+      "createdAt": "2022-09-26T15:50:48Z",
+      "domain": "webtun.mydomain.com"
+   },
+   {
+      "name": "guarava",
+      "port": "8887",
+      "createdAt": "2022-09-26T15:55:14Z",
+      "domain": "webtun.mydomain.com"
+   },
+   {
+      "name": "guaravaa",
+      "port": "8847",
+      "createdAt": "2022-09-26T15:57:51Z",
+      "domain": "webtun.mydomain.com"
+   }
+]
