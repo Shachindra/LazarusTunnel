@@ -19,7 +19,9 @@ import (
 )
 
 func init() {
+	fmt.Println("Heloo")
 	log.SetFormatter(&log.JSONFormatter{})
+
 	log.SetOutput(os.Stderr)
 	log.SetLevel(log.DebugLevel)
 
