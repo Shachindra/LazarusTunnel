@@ -34,3 +34,21 @@ radhe.webtun.mydomain.com {
 		protocols tls1.2 tls1.3
 	}
 }
+
+# basant, 8059, 2022-10-03T10:21:29Z
+basant.webtun.mydomain.com {
+	reverse_proxy / 127.0.0.1:8059
+	log {
+		output file /var/log/caddy/basant.webtun.mydomain.com.access.log {
+			roll_size 3MiB
+			roll_keep 5
+			roll_keep_for 48h
+		}
+		format console
+	}
+	encode gzip zstd
+
+	tls connect@lazarus.network {
+		protocols tls1.2 tls1.3
+	}
+}
