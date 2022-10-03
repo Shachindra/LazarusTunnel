@@ -11,3 +11,7 @@ type Tunnel struct {
 type Tunnels struct {
 	Tunnels []Tunnel `json:"tunnels"`
 }
+
+// type TunnelName struct {
+// 	Name string `json:"name"`
+// }

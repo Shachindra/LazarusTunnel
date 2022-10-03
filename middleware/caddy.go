@@ -2,6 +2,7 @@ package middleware
 
 import (
 	"encoding/json"
+	"fmt"
 	"io/ioutil"
 	"os"
 	"path/filepath"
@@ -15,6 +16,8 @@ import (
 // IsValid check if model is valid
 func IsValidWeb(name string, port int) (int, string, error) {
 	// check if the name is empty
+
+	fmt.Println("name inside isValid middleware caddy.go:", name)
 	if name == "" {
 		return -1, "Tunnel Name is required", nil
 	}
@@ -48,6 +51,7 @@ func IsValidWeb(name string, port int) (int, string, error) {
 
 // ReadWebTunnels fetches all the Web Tunnel
 func ReadWebTunnels() (*model.Tunnels, error) {
+	fmt.Println("Entered in read web tunnel")
 	file, err := os.OpenFile(filepath.Join(os.Getenv("APP_CONF_DIR"), "caddy.json"), os.O_RDWR|os.O_APPEND, 0666)
 	if err != nil {
 		util.LogError("File Open error: ", err)
@@ -55,6 +59,7 @@ func ReadWebTunnels() (*model.Tunnels, error) {
 	}
 
 	b, err := ioutil.ReadAll(file)
+	fmt.Println("Error of readall middleware caddy.go readwebtunnel value:", b, "err :", err)
 	if err != nil {
 		util.LogError("File Read error: ", err)
 		return nil, err

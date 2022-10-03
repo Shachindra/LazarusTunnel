@@ -1,10 +1,10 @@
 package nginx
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/TheLazarusNetwork/LazarusTunnel/core"
@@ -30,7 +30,12 @@ var resp map[string]interface{}
 //addTunnel adds new tunnel config
 func addTunnel(c *gin.Context) {
 	//post form parameters
-	name := strings.ToLower(c.PostForm("name"))
+	// name := strings.ToLower(c.PostForm("name"))
+	// fmt.Println("nameNginix :", name)
+
+	reqBody := model.Tunnel{}
+
+	c.Bind(&reqBody)
 
 	// port allocation
 	max, _ := strconv.Atoi(os.Getenv("NGINX_UPPER_RANGE"))
@@ -38,16 +43,29 @@ func addTunnel(c *gin.Context) {
 
 	for {
 		port, err := core.GetPort(max, min)
+		fmt.Println("Port :", port)
+		fmt.Println("err :", err)
 		if err != nil {
 			panic(err)
+			// fmt.Println("this is the panic error", err)
 		}
 
-		value, msg, err := middleware.IsValidSSH(name, port)
+		value, msg, err := middleware.IsValidSSH(reqBody.Name, port)
+
+		// fmt.Println("valueNginix :", value, msg)
+		// // fmt.Println("caddyNginixValue :", value, msg, err)
+		// fmt.Println("msg :", msg)
+		// fmt.Println("err in isvalid :", err)
+
 		if err != nil {
+
+			fmt.Println("Error in 59 ngnx.go nginx :", err)
+
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
-			c.JSON(http.StatusOK, resp)
+			c.JSON(http.StatusBadRequest, resp)
 			break
 		} else if value == -1 {
+
 			if msg == "Port Already in use" {
 				continue
 			}
@@ -58,7 +76,7 @@ func addTunnel(c *gin.Context) {
 		} else if value == 1 {
 			//create a tunnel struct object
 			var data model.Tunnel
-			data.Name = name
+			data.Name = reqBody.Name
 			data.Port = strconv.Itoa(port)
 			data.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 			data.Domain = os.Getenv("NGINX_DOMAIN")

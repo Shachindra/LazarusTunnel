@@ -1,10 +1,10 @@
 package caddy
 
 import (
+	"fmt"
 	"net/http"
 	"os"
 	"strconv"
-	"strings"
 	"time"
 
 	"github.com/TheLazarusNetwork/LazarusTunnel/core"
@@ -30,7 +30,12 @@ var resp map[string]interface{}
 //addTunnel adds new tunnel config
 func addTunnel(c *gin.Context) {
 	//post form parameters
-	name := strings.ToLower(c.PostForm("name"))
+	// name := strings.ToLower(c.PostForm("name"))
+
+	reqBody := model.Tunnel{}
+
+	c.Bind(&reqBody)
+	fmt.Println("name :", reqBody.Name)
 
 	// port allocation
 	max, _ := strconv.Atoi(os.Getenv("CADDY_UPPER_RANGE"))
@@ -38,18 +43,31 @@ func addTunnel(c *gin.Context) {
 
 	for {
 		port, err := core.GetPort(max, min)
+		fmt.Println("Port caddy :", port)
+
+		// fmt.Println("Port :", port)
+		fmt.Println("err :", err)
 		if err != nil {
 			panic(err)
+
+			// fmt.Println("this is the panic err :",err)
+
 		}
 
 		// check validity of tunnel name and port
-		value, msg, err := middleware.IsValidWeb(name, port)
+		value, msg, err := middleware.IsValidWeb(reqBody.Name, port)
+		fmt.Println("caddyValue :", value)
+		fmt.Println("msg :", msg)
+		fmt.Println("err :", err)
 
+		// fmt.Println("value :", value)
 		if err != nil {
+			fmt.Println("first err != nill")
 			resp = util.Message(500, "Server error, Try after some time or Contact Admin...")
-			c.JSON(http.StatusOK, resp)
+			c.JSON(http.StatusBadGateway, resp)
 			break
 		} else if value == -1 {
+			fmt.Println("before port is already in use")
 			if msg == "Port Already in use" {
 				continue
 			}
@@ -60,7 +78,7 @@ func addTunnel(c *gin.Context) {
 		} else if value == 1 {
 			//create a tunnel struct object
 			var data model.Tunnel
-			data.Name = name
+			data.Name = reqBody.Name
 			data.Port = strconv.Itoa(port)
 			data.CreatedAt = time.Now().UTC().Format(time.RFC3339)
 			data.Domain = os.Getenv("CADDY_DOMAIN")
