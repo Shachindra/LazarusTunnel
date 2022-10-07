@@ -51,6 +51,8 @@ func init() {
 func main() {
 	log.WithFields(util.StandardFields).Infof("Starting TunnelServices Version: %s", util.Version)
 
+	
+
 	if os.Getenv("RUNTYPE") == "debug" {
 		// set gin release debug
 		gin.SetMode(gin.DebugMode)
